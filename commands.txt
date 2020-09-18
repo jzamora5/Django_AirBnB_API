@@ -1,0 +1,4 @@
+python manage.py makemigrations
+
+# Fake migrations when using dump
+python manage.py migrate --fake-initial
