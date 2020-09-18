@@ -19,6 +19,9 @@ from rest_framework.exceptions import ParseError, NotFound
 from api.models import City
 from api.models import User
 from api.models import Place
+from api.models import State
+from api.models import City
+from api.models import Amenity
 
 # Serializers
 
@@ -152,18 +155,35 @@ class PlacesSearch(APIView):
 
             for state in states_obj:
                 if state:
-                    for city in state.cities:
+                    for city in state.cities.all():
                         if city:
-                            for place in city.places:
+                            for place in city.places.all():
                                 list_places.append(place)
 
-        # city_obj= []
-        # if cities:
-        #     if not list_places:
-        #         for c_id in cities:
-        #             try:
-        #                 city_obj.append(City.objects.get(id=c_id))
-        #             except ObjectDoesNotExist:
-        #                 city_obj.append(None)
+        city_obj = []
+        if cities:
+            for c_id in cities:
+                try:
+                    city_obj.append(City.objects.get(id=c_id))
+                except ObjectDoesNotExist:
+                    city_obj.append(None)
+            for city in city_obj:
+                if city:
+                    for place in city.places.all():
+                        if place not in list_places:
+                            list_places.append(place)
 
-        return Response(PlaceSerializer(list_places, many=True))
+        amenities_obj = []
+        if amenities:
+            if not list_places:
+                list_places = Place.objects.all()
+            for a_id in amenities:
+                try:
+                    amenities_obj.append(Amenity.objects.get(id=a_id))
+                except ObjectDoesNotExist:
+                    pass
+            list_places = [place for place in list_places
+                           if all([am in place.amenities.all()
+                                   for am in amenities_obj])]
+
+        return Response(PlaceSerializer(list_places, many=True).data)
