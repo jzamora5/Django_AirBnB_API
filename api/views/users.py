@@ -90,8 +90,6 @@ class SingleUser(APIView):
             raise NotFound(detail="User not found")
 
         data = JSONParser().parse(request)
-        print("== == == == == == == == == =")
-        print(user)
 
         serializer = UserSerializer(user, data=data, partial=True)
 

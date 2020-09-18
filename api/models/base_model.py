@@ -3,6 +3,7 @@
 # Django
 
 from django.db import models
+import uuid
 
 
 class BaseModel(models.Model):
@@ -15,9 +16,12 @@ class BaseModel(models.Model):
        + modified(DateTime): Stores last datetime the object was modified
     """
 
-    # Given by default by Django
+    # Given default by Django
 
     # id = models.AutoField(primary_key=True)
+
+    id = models.CharField(max_length=60, primary_key=True,
+                          default=uuid.uuid4, editable=False)
 
     created_at = models.DateTimeField('created_at',
                                       auto_now_add=True,

@@ -108,7 +108,6 @@ class SinglePlace(APIView):
 
         data = JSONParser().parse(request)
 
-        data["city"] = place.city.id
         serializer = PlaceSerializer(place, data=data, partial=True)
 
         if serializer.is_valid():
@@ -116,3 +115,55 @@ class SinglePlace(APIView):
             return Response(serializer.data)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PlacesSearch(APIView):
+    """
+    Retrieves all Place objects depending of the JSON in the body
+    of the request
+    """
+
+    def post(self, request, format=None):
+        """ Method for endpoint """
+
+        data = JSONParser().parse(request)
+
+        if data and len(data):
+            states = data.get('states', None)
+            cities = data.get('cities', None)
+            amenities = data.get('amenities', None)
+
+        if not data or not len(data) or (
+                not states and
+                not cities and
+                not amenities):
+            places = Place.objects.all()
+            list_places = PlaceSerializer(places, many=True)
+            return Response(list_places.data)
+
+        list_places = []
+        states_obj = []
+        if states:
+            for s_id in states:
+                try:
+                    states_obj.append(State.objects.get(id=s_id))
+                except ObjectDoesNotExist:
+                    states_obj.append(None)
+
+            for state in states_obj:
+                if state:
+                    for city in state.cities:
+                        if city:
+                            for place in city.places:
+                                list_places.append(place)
+
+        # city_obj= []
+        # if cities:
+        #     if not list_places:
+        #         for c_id in cities:
+        #             try:
+        #                 city_obj.append(City.objects.get(id=c_id))
+        #             except ObjectDoesNotExist:
+        #                 city_obj.append(None)
+
+        return Response(PlaceSerializer(list_places, many=True))

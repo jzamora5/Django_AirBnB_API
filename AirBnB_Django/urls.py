@@ -26,4 +26,6 @@ urlpatterns = [
     path("", include(('api.urls.places', 'place'), namespace="places")),
     path("", include(('api.urls.place_amenities', 'place_amenity'),
                      namespace="place_amenities")),
+    path("", include(('api.urls.place_reviews', 'place_review'),
+                     namespace="place_reviews")),
 ]

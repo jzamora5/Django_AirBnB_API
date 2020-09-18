@@ -17,7 +17,6 @@ from api.models.user import User
 class Review(BaseModel):
     """ Representation of Review """
 
-    name = models.CharField(max_length=128, null=False)
     place = models.ForeignKey(
         Place, null=False, related_name='reviews', on_delete=models.CASCADE)
     user = models.ForeignKey(

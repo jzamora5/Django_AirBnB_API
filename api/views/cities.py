@@ -100,8 +100,7 @@ class SingleCity(APIView):
 
         data = JSONParser().parse(request)
 
-        data["state"] = city.state.id
-        serializer = CitySerializer(city, data=data)
+        serializer = CitySerializer(city, data=data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
