@@ -19,14 +19,14 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path("", include(('api.urls.index', 'index'), namespace="Indices")),
-    path("", include(('api.urls.states', 'state'), namespace="states")),
-    path("", include(('api.urls.cities', 'city'), namespace="cities")),
-    path("", include(('api.urls.users', 'user'), namespace="users")),
+    path("", include(('api.urls.index', 'Indices'), namespace="Indices")),
+    path("", include(('api.urls.states', 'states'), namespace="states")),
+    path("", include(('api.urls.cities', 'cities'), namespace="cities")),
+    path("", include(('api.urls.users', 'users'), namespace="users")),
     path("", include(('api.urls.amenities', 'amenities'), namespace="amenities")),
-    path("", include(('api.urls.places', 'place'), namespace="places")),
-    path("", include(('api.urls.place_amenities', 'place_amenity'),
+    path("", include(('api.urls.places', 'places'), namespace="places")),
+    path("", include(('api.urls.place_amenities', 'place_amenities'),
                      namespace="place_amenities")),
-    path("", include(('api.urls.place_reviews', 'place_review'),
+    path("", include(('api.urls.place_reviews', 'place_reviews'),
                      namespace="place_reviews")),
 ]
